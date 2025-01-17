@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        #quiz-container, #result-container {
+            text-align: center;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Personality Quiz</h1>
+        <div id="quiz-container">
+            <div id="question"></div>
+            <div id="options"></div>
+            <button id="next-button" onclick="nextQuestion()">Next</button>
+        </div>
+        <div id="result-container" style="display:none;">
+            <h2>Your Personality Profile</h2>
+            <p id="result"></p>
+            <button onclick="shareResult()">Share on Social Media</button>
+        </div>
+    </div>
+    <script>
+        const questions = [
+            {
+                question: "What's your favorite way to spend a weekend?",
+                options: ["Reading a book", "Going hiking", "Watching movies", "Hanging out with friends"],
+                scores: [1, 2, 3, 4]
+            },
+            {
+                question: "Which animal do you relate to the most?",
+                options: ["Cat", "Dog", "Eagle", "Dolphin"],
+                scores: [1, 2, 3, 4]
+            },
+            {
+                question: "What's your preferred type of vacation?",
+                options: ["Beach", "Mountains", "City", "Countryside"],
+                scores: [1, 2, 3, 4]
+            },
+            {
+                question: "How do you handle stress?",
+                options: ["Meditation", "Exercise", "Talking to friends", "Watching TV"],
+                scores: [1, 2, 3, 4]
+            },
+            {
+                question: "What's your favorite type of music?",
+                options: ["Classical", "Rock", "Pop", "Jazz"],
+                scores: [1, 2, 3, 4]
+            },
+            {
+                question: "Which hobby would you like to try?",
+                options: ["Painting", "Hiking", "Cooking", "Dancing"],
+                scores: [1, 2, 3, 4]
+            },
+            {
+                question: "What's your ideal way to start the day?",
+                options: ["Reading the news", "Going for a run", "Having a big breakfast", "Sleeping in"],
+                scores: [1, 2, 3, 4]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let totalScore = 0;
+
+        function loadQuestion() {
+            const questionElement = document.getElementById('question');
+            const optionsElement = document.getElementById('options');
+            const currentQuestion = questions[currentQuestionIndex];
+
+            questionElement.textContent = currentQuestion.question;
+            optionsElement.innerHTML = '';
+
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.onclick = () => selectOption(currentQuestion.scores[index]);
+                optionsElement.appendChild(button);
+            });
+        }
+
+        function selectOption(score) {
+            totalScore += score;
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            const quizContainer = document.getElementById('quiz-container');
+            const resultContainer = document.getElementById('result-container');
+            const resultElement = document.getElementById('result');
+
+            quizContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+
+            let personality;
+            if (totalScore <= 7) {
+                personality = "Introvert";
+            } else if (totalScore <= 14) {
+                personality = "Adventurer";
+            } else {
+                personality = "Social Butterfly";
+            }
+
+            resultElement.textContent = `You are a ${personality}!`;
+        }
+
+        function shareResult() {
+            const resultText = document.getElementById('result').textContent;
+            const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(resultText)}`;
+            window.open(shareUrl, '_blank');
+        }
+
+        // Load the first question on page load
+        loadQuestion();
+    </script>
+</body>
+</html>
